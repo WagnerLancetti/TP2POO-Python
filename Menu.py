@@ -1,4 +1,5 @@
 import MenuCarro
+import MenuLocacao
 #import Arquivos as Arquivos
 from tkinter import *
 
@@ -75,6 +76,10 @@ class menu:
         if (self.valor.get() == 1):
             self.saida = False
             self.JMenu.destroy()
+        elif (self.valor.get() == 2):
+            self.JMenu.destroy()
+            self.menuLocacao = MenuLocacao.MenuLocacao()
+            self.menuLocacao.Menulocacao()
         elif (self.valor.get() == 3):
             self.JMenu.destroy()
             self.menuCarros = MenuCarro.MenuCarro()

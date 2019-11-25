@@ -49,7 +49,7 @@ class MenuCarro:
             self.tituloContainer1["font"] = ("Arial", "30", "bold", "underline")
             self.tituloContainer1.pack()
 
-            self.Container2 = Frame(self.Janela) # Mensagem para o usuário
+            self.Container2 = Frame(self.Janela) # Mensagem para o usuario
             self.Container2["padx"] = 20 # Distancia do container no eixo x
             self.Container2['bg'] = "light blue"
             self.Container2.pack()
