@@ -25,7 +25,6 @@ class MenuLocacao:
             self.Janela.title("Menu Locacao")
             self.Janela.geometry("500x400")
             self.Janela['bg'] = "light blue"
-            self.Janela.resizable(0,0)
 
             self.Container1 = Frame(self.Janela)
             self.Container1["pady"] = 10
@@ -41,7 +40,7 @@ class MenuLocacao:
             self.Container2['bg'] = "light blue"
             self.Container2.pack()
 
-            self.tituloContainer2 = Label(self.Container2, text = "Marque o que deseja fazer\n", bg = "light blue", font = ("Arial","15"))
+            self.tituloContainer2 = Label(self.Container2, text = "O que deseja fazer?", bg = "light blue", font = ("Arial","15"))
             self.tituloContainer2.pack()   
 
             self.Container3 = Frame(self.Janela)
@@ -49,12 +48,10 @@ class MenuLocacao:
             self.Container3['bg'] = "light blue"
             self.Container3.pack()
 
-            self.opcao = IntVar()
-            Radiobutton(self.Container3, text = "Voltar ao Menu Principal", variable = self.opcao, value = 1, bg = "light blue", font = ("Arial", "12")).pack()
-            Radiobutton(self.Container3, text = "Visualizar uma Locacao", variable = self.opcao, value = 2, bg = "light blue", font = ("Arial", "12")).pack()
-            Radiobutton(self.Container3, text = "Criar uma nova Locacao", variable = self.opcao, value = 3, bg = "light blue", font = ("Arial", "12")).pack()
-            Radiobutton(self.Container3, text = "Devolver um Carro da Locacao", variable = self.opcao, value = 4, bg = "light blue", font = ("Arial", "12")).pack()
-            Radiobutton(self.Container3, text = "Devolver uma Locacao Completa", variable = self.opcao, value = 5, bg = "light blue", font = ("Arial", "12")).pack()
+            self.opcao = StringVar()
+            self.opcao1 = ["Voltar ao Menu Principal", "Visualizar uma Locacao", "Criar uma nova Locacao", "Devolver um Carro da Locacao", "Devolver uma Locacao Completa"]
+            self.opcao.set(self.opcao1[0])
+            OptionMenu(self.Container3,self.opcao,*self.opcao1).pack()
 
             self.Container4 = Frame(self.Janela)
             self.Container4["padx"] = 20
@@ -71,20 +68,9 @@ class MenuLocacao:
             self.Janela.mainloop()
 
     def VisualizarLocacao(self): # Visao
-        self.Janela = Tk()
-        self.Janela.title("Visualizar Locacao")
-        self.Janela.geometry("500x400")
-        self.Janela['bg'] = "light blue"
-
-        self.Container1 = Frame(self.Janela)
-        self.Container1["pady"] = 10
-        self.Container1['bg'] = "light blue"
-        self.Container1.pack()
-
-        self.tituloContainer1 = Label(self.Container1, text = "Visualizar Locacao")
-        self.tituloContainer1['bg'] = "light blue"
-        self.tituloContainer1["font"] = ("Arial","30","bold","underline")
-        self.tituloContainer1.pack()
+        self.Container2.destroy()
+        self.Container3.destroy()
+        self.Container4.destroy()
 
         self.Container2 = Frame(self.Janela)
         self.Container2["padx"] = 20
@@ -121,25 +107,14 @@ class MenuLocacao:
         self.decisao["command"] = self.VisualizaLoca # Controle
         self.decisao.pack(side=LEFT)
 
-        self.Janela.mainloop()
-
     def VisualizaLoca(self): # Modelo (M)
         print ("OK, Modelo")
         self.Janela.destroy()
 
     def CriarLocacao(self): # Visao (V)
-        self.Janela = Tk()
-        self.Janela.title("Criar Locacao")
-        self.Janela.geometry("500x400")
-        self.Janela['bg'] = "light blue"
-
-        self.Container1 = Frame(self.Janela)
-        self.Container1["pady"] = 10
-        self.Container1['bg'] = "light blue"
-        self.Container1.pack()
-
-        self.tituloContainer1 = Label(self.Container1, text = "Criar Locacao", font = ("Arial","30","bold","underline"), bg = "light blue")
-        self.tituloContainer1.pack()
+        self.Container2.destroy()
+        self.Container3.destroy()
+        self.Container4.destroy()
 
         self.Container2 = Frame(self.Janela)
         self.Container2["padx"] = 20
@@ -168,6 +143,7 @@ class MenuLocacao:
             self.opcao.append(self.opcao1)
             Checkbutton(self.Container3,text = "Teste1", onvalue = 1, offvalue = 0, variable = self.opcao[i], bg = "light blue").pack()
             i = i + 1
+
         self.Container4 = Frame(self.Janela)
         self.Container4["padx"] = 20
         self.Container4['bg'] = "light blue"
@@ -191,18 +167,9 @@ class MenuLocacao:
 
     
     def DevolverCarro(self): # Visao (V)
-        self.Janela = Tk()
-        self.Janela.title("Devolver Carro")
-        self.Janela.geometry("500x400")
-        self.Janela['bg'] = "light blue"
-
-        self.Container1 = Frame(self.Janela)
-        self.Container1["pady"] = 10
-        self.Container1['bg'] = "light blue"
-        self.Container1.pack()
-
-        self.tituloContainer1 = Label (self.Container1, text = "Devolver Carro", font = ("Arial","30","bold","underline"), bg = "light blue")
-        self.tituloContainer1.pack()
+        self.Container2.destroy()
+        self.Container3.destroy()
+        self.Container4.destroy()
 
         self.Container2 = Frame(self.Janela)
         self.Container2["padx"] = 20
@@ -226,6 +193,7 @@ class MenuLocacao:
         while(i < 2):
             Radiobutton(self.Container3, text = "Teste "+str(i), font = self.fontepadrao, bg = "light blue", variable = self.opcao, value = i + 1).pack()
             i = i + 1
+
         self.Container4 = Frame(self.Janela)
         self.Container4["padx"] = 20
         self.Container4['bg'] = "light blue"
@@ -248,18 +216,9 @@ class MenuLocacao:
 
 
     def DevolverLocacao(self): # Visao (V)
-        self.Janela = Tk()
-        self.Janela.title("Devolver Locacao")
-        self.Janela.geometry("500x400")
-        self.Janela['bg'] = "light blue"
-        
-        self.Container1 = Frame(self.Janela)
-        self.Container1["pady"] = 10
-        self.Container1['bg'] = "light blue"
-        self.Container1.pack()
-
-        self.tituloContainer1 = Label(self.Container1, text = "Devolver Locacao", font = ("Arial","30","bold","underline"), bg = "light blue")
-        self.tituloContainer1.pack()
+        self.Container2.destroy()
+        self.Container3.destroy()
+        self.Container4.destroy()
         
         self.Container2 = Frame(self.Janela)
         self.Container2["padx"] = 20
@@ -306,18 +265,18 @@ class MenuLocacao:
 
 
     def decideLocacao(self): # Controle
-        if (self.opcao.get() == 1):
+        if (self.opcao.get() == "Voltar ao Menu Principal"):
             self.Janela.destroy()
             self.menuLoca = False
-        elif (self.opcao.get() == 2):
-            self.Janela.destroy()
+            
+        elif (self.opcao.get() == "Visualizar uma Locacao"):
             self.VisualizarLocacao()
-        elif (self.opcao.get() == 3):
-            self.Janela.destroy()
+            
+        elif (self.opcao.get() == "Criar uma nova Locacao"):
             self.CriarLocacao()
-        elif (self.opcao.get() == 4):
-            self.Janela.destroy()
+            
+        elif (self.opcao.get() == "Devolver um Carro da Locacao"):
             self.DevolverCarro()
-        elif (self.opcao.get() == 5):
-            self.Janela.destroy()
+
+        elif (self.opcao.get() == "Devolver uma Locacao Completa"):
             self.DevolverLocacao()
