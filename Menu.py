@@ -1,6 +1,7 @@
-import MenuCarro
-import MenuLocacao
-#import Arquivos as Arquivos
+import MenuCarro as MenuCarro
+import MenuLocacao as MenuLocacao
+import Locadora as Locadora
+import Arquivos as Arquivos
 from tkinter import *
 
 class menu:
@@ -8,9 +9,9 @@ class menu:
     def __init__(self):
         self.menuCarros = None
         self.menuLoca = None
-        #self.locadora = Locadora.Locadora()
-        #self.arquivos = Arquivos.Arquivos()
-        #self.arquivos.Leitura_Arquivo(locadora)
+        self.locadora = Locadora.Locadora()
+        self.arquivos = Arquivos.Arquivos()
+        self.arquivos.Leitura_Arquivo(self.locadora)
         self.fontepadrao = ("Arial", "12")
         self.saida = True
         self.JMenu = None
@@ -80,11 +81,11 @@ class menu:
         elif (self.valor.get() == 2):
             self.JMenu.destroy()
             self.menuLoca = MenuLocacao.MenuLocacao()
-            self.menuLoca.Menulocacao()
+            self.menuLoca.Menulocacao(self.locadora)
         elif (self.valor.get() == 3):
             self.JMenu.destroy()
             self.menuCarros = MenuCarro.MenuCarro()
-            self.menuCarros.Menucarro()
+            self.menuCarros.Menucarro(self.locadora)
             
 
 lp = menu()
