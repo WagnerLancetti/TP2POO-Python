@@ -1,4 +1,4 @@
-from tkinter import *
+ from tkinter import *
 import Carro as Carro
 from random import randint
 
