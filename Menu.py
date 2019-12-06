@@ -1,80 +1,81 @@
-import MenuCarro as MenuCarro
-import MenuLocacao as MenuLocacao
-import Locadora as Locadora
-import Arquivos as Arquivos
-import FactoryMenu as FactoryMenu
-from tkinter import *
+package TrabalhoPratico;
 
-class menu(FactoryMenu.ConcreteFactoryMenu):
-    def Menu(self):
-        self.fontepadrao = ("Arial", "10")
-        self.saida = True
-        self.locadora = Locadora.Locadora()
-        self.arquivos = Arquivos.Arquivos()
-        self.arquivos.Leitura_Arquivo(self.locadora) # Modelo
-        while (self.saida): # Visao
-            self.JMenu = Tk()
-            self.JMenu.title("Menu")
-            self.JMenu.geometry("500x300")
-            self.JMenu['bg'] = "light blue"
-            self.JMenu.resizable(0,0)
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
 
-            self.Container1 = Frame(self.JMenu)
-            self.Container1["pady"] = 5
-            self.Container1['bg'] = "light blue"
-            self.Container1.pack()
+import javax.swing.*;
 
-            self.titulocontainer1 = Label(self.Container1, text = "Menu Principal",bg = "light blue")
-            self.titulocontainer1["font"] = ("Arial","30","bold","underline")
-            self.titulocontainer1.pack()
+public class Menu extends JFrame implements ActionListener{
+	private static final long serialVersionUID = 1L;
+	boolean menu = true;
+    
+	
+    public void MenuPrincipal(){
+    	ButtonGroup grupo = new ButtonGroup();
+    	JLabel titulo2 = new JLabel("Marque o que deseja fazer:",SwingConstants.CENTER);
+    	JLabel titulo = new JLabel("Menu Principal",SwingConstants.CENTER);
+        setTitle("Menu");
+        setSize(500,300);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setVisible(true);
+        setLayout(new GridLayout(6,1));
+        setResizable(false);
 
-            self.Container2 = Frame(self.JMenu)
-            self.Container2["padx"] = 20
-            self.Container2['bg'] = "light blue"
-            self.Container2.pack()
+        titulo.setFont(new Font("Arial",Font.BOLD,30));
+        add(titulo);
+        add(titulo2);
 
-
-            self.mensagem =Label(self.Container2,text ="\nMarque o que deseja fazer: \n",bg ="light blue")
-            self.mensagem["font"] = ("Arial", "15")
-            self.mensagem.pack(side=LEFT)
-
-            self.Container3 = Frame(self.JMenu)
-            self.Container3["padx"] = 20
-            self.Container3['bg'] = "light blue"
-            self.Container3.pack()
-
-            self.valor = IntVar()
-            Radiobutton(self.Container3, text = "Sair do Programa", variable = self.valor, value = 1, bg = "light blue",font = ("Arial","12")).pack()
-            Radiobutton(self.Container3, text = "Entrar no Menu de Locacoes", variable = self.valor, value = 2, bg = "light blue",font = ("Arial","12")).pack()
-            Radiobutton(self.Container3, text = "Entrar no Menu de Carros", variable = self.valor, value = 3, bg = "light blue",font = ("Arial","12")).pack()
-
-            self.Container4 = Frame(self.JMenu)
-            self.Container4["padx"] = 20
-            self.Container4['bg'] = "light blue"
-            self.Container4.pack()
-
-            self.botao = Button(self.Container4,text="Confirmar")
-            self.botao["width"] = 8
-            self.botao["font"] = self.fontepadrao
-            self.botao["command"] = self.decisao # Controle
-            self.botao.pack(side=LEFT)
-
-            self.JMenu.mainloop()
-        self.arquivos.Escrita_Arquivo(self.locadora)
-
-    def decisao(self): # Controle
-
-        if (self.valor.get() == 1):
-            self.saida = False
-            self.JMenu.destroy() # Visao
-        elif (self.valor.get() == 2):
-            self.JMenu.destroy()
-            self.menuLoca = MenuLocacao.MenuLocacao()
-            self.menuLoca.Menulocacao(self.locadora)
-        elif (self.valor.get() == 3):
-            self.JMenu.destroy()
-            self.menuCarros = MenuCarro.MenuCarro()
-            self.menuCarros.Menucarro(self.locadora)
-
-lp = menu()
-lp.Menu()
+        ArrayList<JRadioButton> botao = new ArrayList<JRadioButton>();
+        
+        int i = 0;
+        
+        botao.add(new JRadioButton("Sair do Programa",true));
+        botao.get(i).setHorizontalAlignment(SwingConstants.CENTER);
+        add(botao.get(i));
+        grupo.add(botao.get(i));
+        i++;
+        
+        botao.add(new JRadioButton("Entrar no Menu de Locacoes",false));
+        botao.get(i).setHorizontalAlignment(SwingConstants.CENTER);
+        add(botao.get(i));
+        grupo.add(botao.get(i));
+        i++;        
+        
+        botao.add(new JRadioButton("Entrar no Menu de Carros",false));
+        botao.get(i).setHorizontalAlignment(SwingConstants.CENTER);
+        add(botao.get(i));
+        grupo.add(botao.get(i));
+        i++;
+        
+        JButton conf = new JButton("Confirmar");
+        conf.setPreferredSize(new Dimension(10,10));
+        conf.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e){
+	            if(botao.get(0).isSelected()){    
+	            	System.exit(0);
+	            }    
+	            else if(botao.get(1).isSelected()){    
+	            	MenuLoca m = new MenuLoca();
+	            	m.Menu();
+	            }
+	            else if(botao.get(2).isSelected()){
+//	               MenuCarro m = new MenuCarro();
+//	               m.Menu();
+	            }
+	        }
+    	});
+        add(conf);
+    }    
+    
+    public static void main (String []args){
+    	Menu m = new Menu();
+    	m.MenuPrincipal();
+    }
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// To aqui feliz deixa eu queto
+		
+	}
+}
