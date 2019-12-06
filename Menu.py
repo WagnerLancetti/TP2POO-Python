@@ -5,13 +5,12 @@ import Arquivos as Arquivos
 import FactoryMenu as FactoryMenu
 from tkinter import *
 
-class menu():
-
+class menu(FactoryMenu.ConcreteFactoryMenu):
     def Menu(self):
         self.fontepadrao = ("Arial", "10")
         self.saida = True
         self.locadora = Locadora.Locadora()
-        self.arquivos = Arquivos.Arquivos.instancias()
+        self.arquivos = Arquivos.Arquivos()
         self.arquivos.Leitura_Arquivo(self.locadora) # Modelo
         while (self.saida): # Visao
             self.JMenu = Tk()
@@ -64,6 +63,7 @@ class menu():
         self.arquivos.Escrita_Arquivo(self.locadora)
 
     def decisao(self): # Controle
+
         if (self.valor.get() == 1):
             self.saida = False
             self.JMenu.destroy() # Visao
