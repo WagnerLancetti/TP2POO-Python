@@ -2,6 +2,14 @@ import Locacao as Locacao
 import Carro as Carro
 
 class Arquivos:
+    __instancia = None
+
+    @staticmethod
+    def instancias():
+        if (Arquivos.__instancia == None):
+            Arquivos.__instancia = Arquivos()
+        return Arquivos.__instancia
+
 
     def Leitura_Arquivo(self,locadora):
         entrada = open("Locadora.txt","r")
@@ -79,7 +87,7 @@ class Arquivos:
                     k = k + 1
                     i = i + 1
                     locacao.addCarros(carros)
-                locadora.locacoes.append(locacao)         
+                locadora.locacoes.append(locacao)
         entrada.close()
 
     def Escrita_Arquivo(self,locadora):
