@@ -1,16 +1,18 @@
 import MenuCarro as MenuCarro
-import MenuLocacao as MenuLocacao
 import Locadora as Locadora
+import MenuLocacao as MenuLocacao
 import Arquivos as Arquivos
-import FactoryMenu as FactoryMenu
+import Factory as Factory
 from tkinter import *
 
-class menu(FactoryMenu.ConcreteFactoryMenu):
+class menu():
+    Fabrica1 = Factory.ConcreteFactoryLocacao()
+    Fabrica2 = Factory.ConcreteFactoryCarro()
     def Menu(self):
         self.fontepadrao = ("Arial", "10")
         self.saida = True
         self.locadora = Locadora.Locadora()
-        self.arquivos = Arquivos.Arquivos()
+        self.arquivos = Arquivos.Arquivos.instancias()
         self.arquivos.Leitura_Arquivo(self.locadora) # Modelo
         while (self.saida): # Visao
             self.JMenu = Tk()
@@ -69,11 +71,11 @@ class menu(FactoryMenu.ConcreteFactoryMenu):
             self.JMenu.destroy() # Visao
         elif (self.valor.get() == 2):
             self.JMenu.destroy()
-            self.menuLoca = MenuLocacao.MenuLocacao()
+            self.menuLoca = self.Fabrica1.Create_Menu()
             self.menuLoca.Menulocacao(self.locadora)
         elif (self.valor.get() == 3):
             self.JMenu.destroy()
-            self.menuCarros = MenuCarro.MenuCarro()
+            self.menuCarros = self.Fabrica2.Create_Menu()
             self.menuCarros.Menucarro(self.locadora)
 
 lp = menu()
