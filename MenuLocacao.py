@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 import Carro as Carro
 from random import randint
 import ControleLocacao as ControleLocacao
@@ -41,7 +42,7 @@ class MenuLocacao:
             self.Container3.pack()
 
             self.opcao = StringVar()
-            self.opcao1 = ["Voltar ao Menu Principal", "Visualizar uma Locacao", "Criar uma nova Locacao", "Devolver um Carro da Locacao", "Devolver uma Locacao Completa"]
+            self.opcao1 = ["Voltar ao Menu Principal", "Visualizar uma Locacao", "Criar uma nova Locacao", "Devolver um Carro da Locacao", "Devolver uma Locacao Completa","Exibir Tabela com Dados"]
             self.opcao.set(self.opcao1[0])
             OptionMenu(self.Container3,self.opcao,*self.opcao1).pack()
 
@@ -299,6 +300,51 @@ class MenuLocacao:
         self.mensagem2 = self.Controle.DevolverLoca(self.locadora,self.opcao.get()-1)
         self.Janela.destroy() # Visao
 
+    def ExibirTabela(self):
+        self.Container2.destroy()
+        self.Container3.destroy()
+        self.Container4.destroy()
+        self.Container5.destroy()
+        self.Container2 = Frame(self.Janela)
+        self.Container2.place(x = 20, y = 100, width = 750)
+
+        self.dataCols = ('Locacoes', 'Cliente', 'Data','Quantidade de Carros Cadastrados')
+        self.tree = ttk.Treeview(columns=self.dataCols, show='headings')
+        self.tree.grid(column=0, row=0, sticky='nsew', in_=self.Container2)
+        #self.tree.grid(row=0, column=0, sticky=tk.N + tk.S + tk.W + tk.E)
+
+        vsb = ttk.Scrollbar(orient="vertical",command=self.tree.yview)
+        hsb = ttk.Scrollbar(orient="horizontal",command=self.tree.xview)
+        vsb.grid(column=1, row=0, sticky='ns', in_=self.Container2)
+        hsb.grid(column=0, row=1, sticky='ew', in_=self.Container2)
+        self.tree.configure(yscrollcommand=vsb.set,xscrollcommand=hsb.set)
+        # Define o textos do cabeçalho (nome em maiúsculas)
+        for c in self.dataCols:
+            self.tree.heading(c, text=c.title())
+
+        self.data = []
+        i = 0
+        while (i < len(self.locadora.locacoes)):
+            str1 = "Locacao "+str(i),self.locadora.locacoes[i].getCliente(),self.locadora.locacoes[i].getData(),self.locadora.locacoes[i].getTam()
+            self.data.append(str1)
+            i = i + 1
+            
+        for item in self.data:
+            self.tree.insert('', 'end', values=item)
+        
+        self.Container3 = Frame(self.Janela)
+        self.Container3["padx"] = 5
+        self.Container3["bg"] = "light blue"
+        self.Container3.place(x = 100, y = 370,width = 700)
+
+        botao = Button(self.Container3)
+        botao["width"] = 8
+        botao["text"] = "Voltar"
+        botao["command"] = self.Quit
+        botao.pack()
+
+    def Quit(self):
+        self.Janela.destroy()
 
     def decideLocacao(self): # Controle
         if (self.opcao.get() == "Voltar ao Menu Principal"):
@@ -316,6 +362,9 @@ class MenuLocacao:
 
         elif (self.opcao.get() == "Devolver uma Locacao Completa" and (len(self.locadora.locacoes)>0)):
             self.DevolverLocacao()
-     
+
+        elif (self.opcao.get() == "Exibir Tabela com Dados" and (len(self.locadora.locacoes)>0)):
+            self.ExibirTabela()
+
         else:
             self.mensagem2 = "Nao existe locacoes para serem acessadas, ou carros para serem alugados na locadora."
