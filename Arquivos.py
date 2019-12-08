@@ -36,7 +36,7 @@ class Arquivos:
                         carros.setAlugado(True)
                     locadora.cars.append(carros)
 
-        if (linhaCars == "CarsAlugados\n"):
+        if (linhaCars == "CarsAlugados\n" or VLinha == "CarsAlugados\n"):
             for linhaAluga in entrada:
                 if (linhaAluga == "Locacoes\n"):
                     break
@@ -55,7 +55,7 @@ class Arquivos:
                         carros.setAlugado(True)
                     locadora.carsAlugados.append(carros)
 
-        if (linhaAluga == "Locacoes\n"):
+        if (linhaAluga == "Locacoes\n" or VLinha == "Locacoes\n"):
             for linhaLoca in entrada:
                 tam = 0
                 locacao = Locacao.Locacao()
