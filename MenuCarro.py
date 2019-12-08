@@ -1,12 +1,10 @@
 import Carro as Carro
 from random import randint
 from tkinter import *
-import Factory as Factory
+from tkinter import ttk
 import ControleCarro as ControleCarro
 
 class MenuCarro:
-    Fabrica1 = Factory.ConcreteFactoryLocacao()
-    Fabrica2 = Factory.ConcreteFactoryCarro
     Controle = ControleCarro.ControleMenuCarro()
     def Menucarro(self,locadora):
         self.fontePadrao = ("Arial", "10")
@@ -43,7 +41,7 @@ class MenuCarro:
             self.Container3.pack()
 
             self.opcao = StringVar()
-            self.opcao1 = ["Voltar para o Menu Principal","Cadastrar Carro", "Remover Carro", "Buscar Carro"]
+            self.opcao1 = ["Voltar para o Menu Principal","Cadastrar Carro", "Remover Carro", "Buscar Carro","Exibir Tabela com Dados"]
             self.opcao.set(self.opcao1[0])
 
             OptionMenu(self.Container3, self.opcao,*self.opcao1).pack()
@@ -311,6 +309,59 @@ class MenuCarro:
         self.mensagem2 = self.Controle.BuscarCarros(self.opcao.get(),self.locadora,self.verifica.get())
         self.Janela.destroy()
 
+    def ExibirTabela(self):
+        self.Container2.destroy()
+        self.Container3.destroy()
+        self.Container4.destroy()
+        self.Container5.destroy()
+
+        self.Container6 = Frame(self.Janela)
+        self.Container6.place(x = 5, y = 100, width = 1170)
+        self.dataCols = ('Carros', 'Marca', 'Placa','Cor','Modelo','Ano','ID')
+        self.tree = ttk.Treeview(columns=self.dataCols, show='headings')
+        self.tree.grid(column=0, row=0, sticky='nsew', in_=self.Container6)
+        #self.tree.grid(row=0, column=0, sticky=tk.N + tk.S + tk.W + tk.E)
+
+        vsb = ttk.Scrollbar(orient="vertical",command=self.tree.yview)
+        hsb = ttk.Scrollbar(orient="horizontal",command=self.tree.xview)
+        vsb.grid(column=1, row=0, sticky='ns', in_=self.Container6)
+        hsb.grid(column=0, row=1, sticky='ew', in_=self.Container6)
+        self.tree.configure(yscrollcommand=vsb.set,xscrollcommand=hsb.set)
+        # Define o textos do cabeçalho (nome em maiúsculas)
+        for c in self.dataCols:
+            self.tree.heading(c, text=c.title())
+
+        self.data = []
+        i = 0
+        while (i < len(self.locadora.cars)):
+            str1 = "Carro "+str(i),self.locadora.cars[i].getMarca(),self.locadora.cars[i].getPlaca(),self.locadora.cars[i].getCor(),self.locadora.cars[i].getModelo(),str(self.locadora.cars[i].getAno()),str(self.locadora.cars[i].identificador)
+            self.data.append(str1)
+            i = i + 1
+        j = i
+        i = 0
+        while (i < len(self.locadora.carsAlugados)):
+            str1 = "Carro "+str(j),self.locadora.carsAlugados[i].getMarca(),self.locadora.carsAlugados[i].getPlaca(),self.locadora.carsAlugados[i].getCor(),self.locadora.carsAlugados[i].getModelo(),str(self.locadora.carsAlugados[i].getAno()),str(self.locadora.carsAlugados[i].identificador)
+            self.data.append(str1)
+            j = j + 1
+            i = i + 1
+
+        for item in self.data:
+            self.tree.insert('', 'end', values=item)
+
+        self.Container3 = Frame(self.Janela)
+        self.Container3["padx"] = 5
+        self.Container3["bg"] = "light blue"
+        self.Container3.place(x = 350, y = 370,width = 700)
+
+        botao = Button(self.Container3)
+        botao["width"] = 8
+        botao["text"] = "Voltar"
+        botao["command"] = self.Quit
+        botao.pack()
+    
+    def Quit(self):
+        self.Janela.destroy()
+
     def verificaOpcaoCarro(self,evet): # Controle
         if (self.opcao.get() == "Voltar para o Menu Principal"):
             self.Janela.destroy() # Visao
@@ -324,5 +375,8 @@ class MenuCarro:
 
         elif (self.opcao.get() == "Buscar Carro" and ((len(self.locadora.cars) > 0 or len(self.locadora.carsAlugados) > 0))):
             self.BuscarCarro()
+
+        elif (self.opcao.get() == "Exibir Tabela com Dados" and ((len(self.locadora.cars) > 0 or len(self.locadora.carsAlugados) > 0))):
+            self.ExibirTabela()
         else:
             self.mensagem2 = "Nao existem carros na locadora para serem removidos, ou para serem mostrados!"
