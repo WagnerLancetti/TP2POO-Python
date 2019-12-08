@@ -1,9 +1,13 @@
 import Carro as Carro
 from random import randint
 from tkinter import *
+import Factory as Factory
+import ControleCarro as ControleCarro
 
 class MenuCarro:
-
+    Fabrica1 = Factory.ConcreteFactoryLocacao()
+    Fabrica2 = Factory.ConcreteFactoryCarro
+    Controle = ControleCarro.ControleMenuCarro()
     def Menucarro(self,locadora):
         self.fontePadrao = ("Arial", "10")
         self.locadora = locadora
@@ -53,7 +57,7 @@ class MenuCarro:
             self.decisao["text"] = "Confirmar"
             self.decisao["font"] = self.fontePadrao
             self.decisao["width"] = 8
-            self.decisao["command"] = self.verificaOpcaoCarro # Controle
+            self.decisao.bind("<Button-1>",self.verificaOpcaoCarro)
             self.decisao.pack(side=LEFT)
 
             self.Container5 = Frame(self.Janela)
@@ -63,6 +67,8 @@ class MenuCarro:
 
             self.tituloContainer5 = Label(self.Container5, text = self.mensagem2,bg = "light blue", font = self.fontePadrao)
             self.tituloContainer5.pack()
+
+
             self.Janela.mainloop()
 
     def CadastrarCarro(self): # Visao
@@ -154,96 +160,50 @@ class MenuCarro:
         self.decisao["text"] = ("Confirmar")
         self.decisao["width"] = 8
         self.decisao["font"] = self.fontePadrao
-        self.decisao["command"] = self.verificacaoCadastro # Controle
+        self.decisao.bind("<Button-1>",self.VerificaCadastro)
         self.decisao.pack(side=LEFT)
 
-        self.Container9 = Frame(self.Janela)
-        self.Container9["padx"] = 20
-        self.Container9["bg"] = "light blue"
-        self.Container9.pack()
-
-        self.mensagem = Label(self.Container9, text = "", font = self.fontePadrao, bg = "light blue")
-
-    def verificacaoCadastro(self): # Controle
-        verifica = 0
-        self.mensagem["text"] = ""
-        if (self.placa.get() == ''):
-            self.mensagem["text"] = "*Digite uma Placa" # Visao
-            verifica = verifica + 1
-        if (self.marca.get() == ''):
-            self.mensagem["text"] = self.mensagem["text"] + "\n*Digite uma Marca" # Visao
-            verifica = verifica + 1
-        if (self.cor.get() == ''):
-            self.mensagem["text"] = self.mensagem["text"] + "\n*Digite uma Cor*" # Visao
-            verifica = verifica + 1
-        if (self.modelo.get() == ''):
-            self.mensagem["text"] = self.mensagem["text"] + "\n*Digite um Modelo*" # Visao
-            verifica = verifica + 1
-        if (self.ano.get() == ''):
-            self.mensagem["text"] = self.mensagem["text"] + "\n*Digite o ano*" # Visao
-        if (verifica == 0):
-            self.CadastraCarro()
-        else:
-            self.mensagem.destroy() # Visao
-            self.mensagem.pack()
-
-
-    def CadastraCarro(self): # Modelo
-        if(self.VerificaPlaca()): # Controle
-            self.locadora.cars.append(Carro.Carro(str(self.marca.get()),str(self.placa.get()),str(self.cor.get()),str(self.modelo.get()),int(self.ano.get()),randint(0,1000000)))
-            self.mensagem2 = "Carro Cadastrado com Sucesso!" # Visao
-            self.Janela.destroy()
-        else:
-            self.mensagem2 = "Essa placa já existe no sistema." # Visao
-            self.Janela.destroy()
-
-    def VerificaPlaca(self): # Modelo
-        i = 0
-        while(i < len(self.locadora.cars)):
-            if (self.locadora.cars[i].getPlaca() == self.placa.get()):
-                return False
-            i = i + 1
-        return True
+    def VerificaCadastro(self,event):
+        self.decisao.destroy()
+        self.mensagem2 = self.Controle.verificacaoCadastro(self.placa.get(),self.marca.get(),self.cor.get(),self.modelo.get(),self.ano,self.locadora)
+        self.Janela.destroy()
 
     def RemoverCarro(self): # Visao
-        if (len(self.locadora.cars) > 0):
-            self.tituloContainer5.destroy()
-            self.Container2.destroy()
-            self.Container3.destroy()
-            self.Container4.destroy()
-            self.Container2 = Frame(self.Janela)
-            self.Container2["padx"] = 20
-            self.Container2['bg'] = "light blue"
-            self.Container2.pack()
+        self.tituloContainer5.destroy()
+        self.Container2.destroy()
+        self.Container3.destroy()
+        self.Container4.destroy()
+        self.Container2 = Frame(self.Janela)
+        self.Container2["padx"] = 20
+        self.Container2['bg'] = "light blue"
+        self.Container2.pack()
 
-            self.mensagem1 = Label(self.Container2,text = "Escolha qual carro deseja remover",bg = "light blue")
-            self.mensagem1["font"] = ("Arial","15")
-            self.mensagem1.pack()
+        self.mensagem1 = Label(self.Container2,text = "Escolha qual carro deseja remover",bg = "light blue")
+        self.mensagem1["font"] = ("Arial","15")
+        self.mensagem1.pack()
 
-            self.opcao = IntVar()
-            i = 0
-            while (i < len(self.locadora.cars)):
-                Radiobutton(self.Container2,text = self.locadora.ListarCarrosParaAlugar(i).toString(), variable = self.opcao, value = i + 1, bg = "light blue").pack()
-                i = i + 1
+        self.opcao = IntVar()
+        i = 0
+        while (i < len(self.locadora.cars)):
+            Radiobutton(self.Container2,text = self.locadora.ListarCarrosParaAlugar(i).toString(), variable = self.opcao, value = i + 1, bg = "light blue").pack()
+            i = i + 1
 
-            self.Container3 = Frame (self.Janela)
-            self.Container3["padx"] = 20
-            self.Container3['bg'] = "light blue"
-            self.Container3.pack()
+        self.Container3 = Frame (self.Janela)
+        self.Container3["padx"] = 20
+        self.Container3['bg'] = "light blue"
+        self.Container3.pack()
 
-            self.decisao = Button(self.Container3)
-            self.decisao["text"] = ("Confirmar")
-            self.decisao["width"] = 8
-            self.decisao["font"] = self.fontePadrao
-            self.decisao["command"] = self.RemoveCarro # Modelo
-            self.decisao.pack(side=LEFT)
+        self.decisao = Button(self.Container3)
+        self.decisao["text"] = ("Confirmar")
+        self.decisao["width"] = 8
+        self.decisao["font"] = self.fontePadrao
+        self.decisao.bind("<Button-1>",self.RemoveCarro)
+        self.decisao["command"] = self.RemoveCarro # Modelo
+        self.decisao.pack(side=LEFT)
 
-        else:
-            self.mensagem2 = "Não há carros na locadora!"
-
-    def RemoveCarro(self): # Modelo
-        del(self.locadora.cars[int(self.opcao.get()) - 1])
-        self.mensagem2 = "Carro removido com sucesso!" # Visao
+    def RemoveCarro(self,event): # Modelo
+        self.decisao.destroy()
+        self.mensagem2 = self.Controle.RemoveCarro(self.opcao.get()-1,self.mensagem2,self.locadora)
         self.Janela.destroy()
 
     def BuscarCarro(self): # Visao
@@ -288,12 +248,7 @@ class MenuCarro:
         self.Container5['bg'] = "light blue"
         self.Container5.pack()
 
-        self.Container6 = Frame(self.Janela)
-        self.Container6["padx"] = 20
-        self.Container6['bg'] = "light blue"
-        self.Container6.pack()
-
-    def BuscaCarros(self): # Controle
+    def BuscaCarros(self): # Visao
         self.decisao.destroy()
         self.Container3.destroy()
         self.mensagem.destroy()
@@ -349,35 +304,25 @@ class MenuCarro:
         botao["text"] = ("Pesquisar")
         botao["width"] = 8
         botao["font"] = self.fontePadrao
-        botao["command"] = self.MostraCarros # Controle
+        botao.bind("<Button-1>",self.MostraCarros)
         botao.pack(side = LEFT)
 
-    def MostraCarros(self): # Controle
-        if (self.opcao.get() == "Id" or self.opcao.get() == "Ano"):
-            especificidade = self.locadora.BuscarCarro(self.opcao.get(),int(self.verifica.get())) # Modelo
-        else:
-            especificidade = self.locadora.BuscarCarro(self.opcao.get(),self.verifica.get()) # Modelo
-        if (len(especificidade) == 0):
-            self.mensagem2 = "Nao exisite nenhum carro com essa especificacao." # Visao
-        else:
-            i = 0
-            self.mensagem2 = ""
-            while(i < len(especificidade)):
-                self.mensagem2 = self.mensagem2 + especificidade[i].toString() + "\n" # Visao
-                i = i + 1
-            del (especificidade[:])
+    def MostraCarros(self,event): # Controle
+        self.mensagem2 = self.Controle.BuscarCarros(self.opcao.get(),self.locadora,self.verifica.get())
         self.Janela.destroy()
 
-    def verificaOpcaoCarro(self): # Controle
+    def verificaOpcaoCarro(self,evet): # Controle
         if (self.opcao.get() == "Voltar para o Menu Principal"):
             self.Janela.destroy() # Visao
             self.menucarro = False
 
-        if (self.opcao.get() == "Cadastrar Carro"):
+        elif (self.opcao.get() == "Cadastrar Carro"):
             self.CadastrarCarro()
 
-        if (self.opcao.get() == "Remover Carro"):
+        elif (self.opcao.get() == "Remover Carro" and (len(self.locadora.cars) > 0)):
             self.RemoverCarro()
 
-        if (self.opcao.get() == "Buscar Carro"):
+        elif (self.opcao.get() == "Buscar Carro" and ((len(self.locadora.cars) > 0 or len(self.locadora.carsAlugados) > 0))):
             self.BuscarCarro()
+        else:
+            self.mensagem2 = "Nao existem carros na locadora para serem removidos, ou para serem mostrados!"
