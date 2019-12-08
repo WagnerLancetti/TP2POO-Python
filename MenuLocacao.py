@@ -1,8 +1,11 @@
- from tkinter import *
+from tkinter import *
 import Carro as Carro
 from random import randint
+import ControleLocacao as ControleLocacao
 
 class MenuLocacao:
+    def __init__(self):
+        self.Controle = ControleLocacao.ControleMenuLocacao()
 
     def Menulocacao(self,locadora): 
         self.fontepadrao = ("Arial","10")
@@ -100,15 +103,11 @@ class MenuLocacao:
         self.decisao["text"] = ("Confirmar")
         self.decisao["width"] = 8
         self.decisao["font"] = self.fontepadrao
-        self.decisao["command"] = self.VisualizaLoca # Controle
+        self.decisao.bind("<Button-1>",self.VisualizaLoca)
         self.decisao.pack(side=LEFT)
 
-    def VisualizaLoca(self): # Modelo
-        self.mensagem2 = "Locacao do cliente "+self.locadora.locacoes[self.opcao.get()-1].getCliente() +" alugada em "+self.locadora.locacoes[self.opcao.get()-1].getData()+". "+"\n\nCarros na locacao: "
-        i = 0
-        while (i < self.locadora.locacoes[self.opcao.get()-1].getTam()):
-            self.mensagem2 = self.mensagem2 + "\n"+self.locadora.locacoes[self.opcao.get()-1].getCarro(i).toString()
-            i = i + 1
+    def VisualizaLoca(self,event): # Controle
+        self.mensagem2 = self.Controle.VisualizaLocacao(self.locadora,self.opcao.get()-1)
         self.Janela.destroy()
 
     def CriarLocacao(self): # Visao (V)
@@ -174,32 +173,11 @@ class MenuLocacao:
         self.decisao["width"] = 8
         self.decisao["text"] = "Confirmar"
         self.decisao["font"] = self.fontepadrao
-        self.decisao["command"] = self.verificaCriaLoca # Controle
+        self.decisao.bind("<Button-1>",self.verificaCriaLoca)
         self.decisao.pack()
 
-    def verificaCriaLoca(self): # Modelo
-        i = 0
-        carros = []
-        indices = []
-        while (i < len(self.opcao)):
-            if (self.opcao[i].get() == 1):
-                self.locadora.cars[i].setAlugado(True)
-                self.locadora.carsAlugados.append(self.locadora.cars[i])
-                carros.append(self.locadora.cars[i])
-                indices.append(self.locadora.cars[i].getPlaca())
-            i = i + 1
-        i = 0
-        while (i < len(indices)):
-            j = 0
-            while (j < len(self.locadora.cars)):
-                placa = indices[i]
-                if (indices[i] == self.locadora.cars[j].getPlaca()):
-                    del(self.locadora.cars[j])
-                j = j + 1
-            i = i + 1
-        self.locadora.CriarLocacao(carros,self.nome.get(),self.data.get(),randint(0,1000000))
-        self.mensagem2 = "Locacao Criada com Sucesso!" # Controle
-        del (carros[:])
+    def verificaCriaLoca(self,event): # Controle
+        self.mensagem2 = self.Controle.CriaLoca(self.locadora,self.opcao,self.nome.get(),self.data.get())
         self.Janela.destroy() # Visao
 
 
@@ -237,7 +215,7 @@ class MenuLocacao:
         self.decisao["width"] = 8
         self.decisao["text"] = "Confirmar"
         self.decisao["font"] = self.fontepadrao
-        self.decisao["command"] = self.verificaLocaDelCar # Controle
+        self.decisao["command"] = self.verificaLocaDelCar
         self.decisao.pack()
 
     def verificaLocaDelCar(self): # Visao
@@ -272,17 +250,12 @@ class MenuLocacao:
         self.decisao["width"] = 8
         self.decisao["text"] = "Confirmar"
         self.decisao["font"] = self.fontepadrao
-        self.decisao["command"] = self.DevolverCarros # Controle
+        self.decisao.bind("<Button-1>",self.DevolverCarros)
         self.decisao.pack()
 
-    def DevolverCarros(self): # Modelo
-        self.locadora.DevolverCarro(self.opcao.get()-1, self.opcao1.get()-1)
-        if (self.locadora.locacoes[self.opcao.get()-1].getTam() <= 0):
-            del(self.locadora.locacoes[self.opcao.get()-1])
-            self.mensagem2 = "Carro devolvido com sucesso e locacao apagada!"
-        else:
-            self.mensagem2 = "Carro devolvido com sucesso!" # Controle
-        self.Janela.destroy() # Visao
+    def DevolverCarros(self,event): # Controle
+        self.mensagem2 = self.Controle.DevolverCarros(self.locadora,self.opcao.get()-1,self.opcao1.get()-1)
+        self.Janela.destroy()
 
     def DevolverLocacao(self): # Visao (V)
         self.Container2.destroy()
@@ -318,13 +291,12 @@ class MenuLocacao:
         self.decisao["width"] = 8
         self.decisao["text"] = "Confirmar"
         self.decisao["font"] = self.fontepadrao
-        self.decisao["command"] = self.verificaDelLoca # Controle
+        self.decisao.bind("<Button-1>",self.verificaDelLoca)
         self.decisao.pack()
 
 
-    def verificaDelLoca(self): # Modelo
-        self.locadora.DevolverLocacao(self.opcao.get()-1)
-        self.mensagem2 = "Locacao devolvida com sucesso!" # Controle
+    def verificaDelLoca(self,event): # Controle
+        self.mensagem2 = self.Controle.DevolverLoca(self.locadora,self.opcao.get()-1)
         self.Janela.destroy() # Visao
 
 
@@ -333,14 +305,17 @@ class MenuLocacao:
             self.Janela.destroy() # Visao
             self.menuLoca = False
 
-        elif (self.opcao.get() == "Visualizar uma Locacao"):
+        elif (self.opcao.get() == "Visualizar uma Locacao" and (len(self.locadora.locacoes)>0)):
             self.VisualizarLocacao()
 
-        elif (self.opcao.get() == "Criar uma nova Locacao"):
+        elif (self.opcao.get() == "Criar uma nova Locacao" and (len(self.locadora.cars)>0)):
             self.CriarLocacao()
 
-        elif (self.opcao.get() == "Devolver um Carro da Locacao"):
+        elif (self.opcao.get() == "Devolver um Carro da Locacao" and (len(self.locadora.locacoes)>0)):
             self.DevolverCarro()
 
-        elif (self.opcao.get() == "Devolver uma Locacao Completa"):
+        elif (self.opcao.get() == "Devolver uma Locacao Completa" and (len(self.locadora.locacoes)>0)):
             self.DevolverLocacao()
+     
+        else:
+            self.mensagem2 = "Nao existe locacoes para serem acessadas, ou carros para serem alugados na locadora."
